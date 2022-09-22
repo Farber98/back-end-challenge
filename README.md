@@ -21,15 +21,13 @@ deverá listar todos os produtos com aquela respectiva busca, poderá ser feito 
 #### Requisitos Obrigatórios
 
 * Ter uma cobertura de teste relativamente boa, a maior que você conseguir.
-* Usar PHP
-* Pode usar qualquer framework PHP para o desenvolvimento ou não usar nenhum, fica a sua escolha.
+* Pode usar qualquer framework.
 * Criar um cache para consulta.
 
 
 #### PLUS - Não necessário
 
-* Colocar uma autenticação JWT.
-* Usar PHP 7.1
+* Colocar uma autenticação.
 
 ## Orientações
 * Procure fazer uma API sucinta. 
