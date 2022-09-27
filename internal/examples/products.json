@@ -38,7 +38,14 @@
     {
       "id": 8310,
       "name": "VESTIDO CURTO PONTO ROMA MANGA",
-      "tags": ["casual", "metal", "delicado", "descolado", "elastano", "estampas"]
+      "tags": [
+        "casual",
+        "metal",
+        "delicado",
+        "descolado",
+        "elastano",
+        "estampas"
+      ]
     },
     {
       "id": 8309,
@@ -63,7 +70,15 @@
     {
       "id": 8291,
       "name": "VESTIDO MANGA COMPRIDA COSTAS",
-      "tags": ["inverno", "estampas", "delicado", "descolado", "casual", "passeio", "basics"]
+      "tags": [
+        "inverno",
+        "estampas",
+        "delicado",
+        "descolado",
+        "casual",
+        "passeio",
+        "basics"
+      ]
     },
     {
       "id": 8264,
@@ -78,7 +93,14 @@
     {
       "id": 8110,
       "name": "VESTIDO CUT OUT TRICOT",
-      "tags": ["casual", "colorido", "delicado", "descolado", "viagem", "inverno"]
+      "tags": [
+        "casual",
+        "colorido",
+        "delicado",
+        "descolado",
+        "viagem",
+        "inverno"
+      ]
     },
     {
       "id": 8109,
@@ -88,7 +110,15 @@
     {
       "id": 8104,
       "name": "VESTIDO BABADO TURTLENECK",
-      "tags": ["casual", "metal", "delicado", "neutro", "basics", "inverno", "viagem"]
+      "tags": [
+        "casual",
+        "metal",
+        "delicado",
+        "neutro",
+        "basics",
+        "inverno",
+        "viagem"
+      ]
     },
     {
       "id": 8091,
