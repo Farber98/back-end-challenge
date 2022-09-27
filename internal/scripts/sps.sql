@@ -1,4 +1,4 @@
-CREATE PROCEDURE `am_products_insert`(pIn json)
+CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_products_insert`(pIn json)
 SALIR: BEGIN
   
     DECLARE pError CONDITION FOR SQLSTATE '45000';
@@ -29,11 +29,11 @@ SALIR: BEGIN
         LEAVE SALIR;
     END IF;
     
-	INSERT INTO products VALUES (pIdProduct, pProduct);
+	INSERT INTO products VALUES (pIdProduct, LOWER(pProduct));
     
     SELECT  JSON_OBJECT(
         'id_product', id_product,
-        'product', product
+        'product', UPPER(product)
         ) pOut 
 	FROM      products
 	WHERE     id_product = pIdProduct;
@@ -45,7 +45,7 @@ END
 --
 --
 
-CREATE PROCEDURE `am_product_tags_insert`(pIn json)
+CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_product_tags_insert`(pIn json)
 SALIR: BEGIN
   
     DECLARE pError CONDITION FOR SQLSTATE '45000';
@@ -86,7 +86,7 @@ tagsLoop:
             SET pTableIdTag = (SELECT id_tag FROM tags WHERE tag = pTag);
             
             IF pTableIdTag IS NULL THEN
-				INSERT INTO tags VALUES (0, pTag);
+				INSERT INTO tags VALUES (0, LOWER(pTag));
                 SET pTableIdTag = LAST_INSERT_ID();
             END IF;
 
@@ -102,9 +102,9 @@ tagsLoop:
     
     SELECT  COALESCE(JSON_ARRAYAGG(JSON_OBJECT(
         'id_product', pt.id_product,
-        'product', p.product,
+        'product', UPPER(p.product),
         'id_tag', pt.id_tag,
-        'tag', t.tag
+        'tag', UPPER(t.tag)
         )), JSON_ARRAY()) pOut 
 	FROM    product_tags pt
     JOIN	products p ON pt.id_product = p.id_product

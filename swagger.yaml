@@ -11,6 +11,8 @@ servers:
 tags:
   - name: Test
     description: Test to see if the API is up
+  - name: Products
+    description: Products insertions and retrievals
 
 paths:
   /hello:
@@ -22,3 +24,101 @@ paths:
       responses:
         "200":
           description: Succesful operation.
+
+  /products/batch-insert:
+    post:
+      tags:
+        - Products
+      summary: Batch insertion of products and tags.
+      description: Batch insertion of products and tags.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        description: Product ID
+                        type: integer
+                        example: 8371
+                      name:
+                        description: Product name
+                        type: string
+                        example: VESTIDO TRICOT CHEVRON
+                      tags:
+                        description: Product tags
+                        type: array
+                        example: ["balada", "neutro", "delicado", "festa"]
+              required:
+                - products
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: Succesful inserts.
+                  data:
+                    description: Products inserted succesfully.
+                    type: array
+                    items:
+                      type: string
+                      example: VESTIDO TRICOT CHEVRON
+        "207":
+          description: Multi status. Some failed, but could finish gracefully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR. Failed:"
+                  data:
+                    description: Products inserted succesfully before the error occurred.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id_product:
+                          type: number
+                          example: 8371
+                        tags:
+                          description: Product tags
+                          type: array
+                          example: ["balada", "neutro", "delicado", "festa"]
+                        error:
+                          type: object
+                          example:
+                            {
+                              "Number": 1644,
+                              "Message": "id_product already exists.",
+                            }
+        "500":
+          description: Internal server error. Some succeded, but could not finish gracefully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR. Succesful inserts:"
+                  data:
+                    description: Products inserted succesfully before the error occurred.
+                    type: array
+                    items:
+                      type: string
+                      example: VESTIDO TRICOT CHEVRON

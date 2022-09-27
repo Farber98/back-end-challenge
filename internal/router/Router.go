@@ -29,8 +29,9 @@ func Init() *echo.Echo {
 			},
 		}))
 
-		arrayControllers := make([]interfaces.IController, 0)
+		arrayControllers := make([]interfaces.IController, 2)
 		arrayControllers = append(arrayControllers, &controllers.HelloController{})
+		arrayControllers = append(arrayControllers, &controllers.ProductsController{})
 
 		group := e.Group("")
 		for _, c := range arrayControllers {

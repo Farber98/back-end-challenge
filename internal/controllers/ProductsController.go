@@ -13,9 +13,9 @@ type ProductsController struct {
 }
 
 func (controller *ProductsController) LoadRoutes(gr *echo.Group) {
-	grTokens := gr.Group("/products")
-	grTokens.POST("/batch", controller.BatchInsert)
-	grTokens.GET("/search", controller.Search)
+	grProducts := gr.Group("/products")
+	grProducts.POST("/batch-insert", controller.BatchInsert)
+	grProducts.GET("/search", controller.Search)
 }
 
 func (controller *ProductsController) BatchInsert(c echo.Context) error {
@@ -26,19 +26,38 @@ func (controller *ProductsController) BatchInsert(c echo.Context) error {
 	}
 
 	var FailedProducts []*models.FailedInsertion
+	var SuccededProducts []string
 
-	for i := range productJSON {
-		_, err := controller.ProductsService.Insert(productJSON[i])
+	for i := range productJSON.Products {
+
+		product := &models.Product{
+			IDProduct: uint16(productJSON.Products[i].ID),
+			Name:      productJSON.Products[i].Name,
+			Tags:      productJSON.Products[i].Tags,
+		}
+
+		// Product insertion
+		dbProduct, err := controller.ProductsService.Insert(product)
 		if err != nil {
-			FailedProducts = append(FailedProducts, &models.FailedInsertion{IDProduct: productJSON[i].IDProduct, Error: err})
+			FailedProducts = append(FailedProducts,
+				&models.FailedInsertion{IDProduct: product.IDProduct, Tags: product.Tags, Error: err})
 			continue
 		}
-	}
-	if FailedProducts != nil || len(FailedProducts) > 0 {
-		return c.JSON(http.StatusOK, models.NewResponseWithData("Inserted with errors.", FailedProducts))
+
+		// Tags insertion
+		_, err = controller.ProductsService.InsertTags(product)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, models.NewResponseWithData("ERROR. Successful inserts:", SuccededProducts))
+		}
+
+		SuccededProducts = append(SuccededProducts, dbProduct.Name)
 	}
 
-	return c.JSON(http.StatusOK, models.NewResponseWithoutData("Succesful insert."))
+	if FailedProducts != nil || len(FailedProducts) > 0 {
+		return c.JSON(http.StatusMultiStatus, models.NewResponseWithData("ERROR. Failed:", FailedProducts))
+	}
+
+	return c.JSON(http.StatusOK, models.NewResponseWithData("Succesful inserts.", SuccededProducts))
 }
 
 func (controller *ProductsController) Search(c echo.Context) error {
