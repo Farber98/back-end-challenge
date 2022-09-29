@@ -7,6 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const OK_HELLO = "Hello from th-amaro."
+
 type HelloController struct{}
 
 func (controller *HelloController) LoadRoutes(gr *echo.Group) {
@@ -14,5 +16,5 @@ func (controller *HelloController) LoadRoutes(gr *echo.Group) {
 }
 
 func (controller *HelloController) Hello(c echo.Context) error {
-	return c.JSON(http.StatusOK, models.NewResponseWithoutData("Hello from th-amaro"))
+	return c.JSON(http.StatusOK, models.NewResponseWithoutData(OK_HELLO))
 }
