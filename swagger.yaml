@@ -159,7 +159,7 @@ paths:
                   message:
                     description: Operation status message.
                     type: string
-                    example: Succesful inserts.
+                    example: "Succesful search."
                   data:
                     description: Products inserted succesfully.
                     type: object
@@ -185,8 +185,8 @@ paths:
                               "id_product": 8371,
                               "product": "VESTIDO TRICOT CHEVRON",
                             }
-        "500":
-          description: TODO.
+        "400":
+          description: Bad Request. Wrong ID format.
           content:
             application/json:
               schema:
@@ -195,10 +195,15 @@ paths:
                   message:
                     description: Operation status message.
                     type: string
-                    example: "ERROR. Succesful inserts:"
-                  data:
-                    description: Products inserted succesfully before the error occurred.
-                    type: array
-                    items:
-                      type: string
-                      example: VESTIDO TRICOT CHEVRON
+                    example: "Wrong ID format."
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR."
