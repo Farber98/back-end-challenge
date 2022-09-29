@@ -122,3 +122,83 @@ paths:
                     items:
                       type: string
                       example: VESTIDO TRICOT CHEVRON
+
+  /products/search:
+    get:
+      tags:
+        - Products
+      summary: Searchs products by id, name and/or tag.
+      description: Searchs a product by id, name and/or tag.
+      parameters:
+        - in: query
+          name: id
+          description: Product ID
+          schema:
+            type: integer
+          example: 8371
+        - in: query
+          name: name
+          description: Product name
+          schema:
+            type: string
+          example: "VESTIDO TRICOT CHEVRON"
+        - in: query
+          name: tag
+          description: Product tag
+          schema:
+            type: string
+          example: "neutro"
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: Succesful inserts.
+                  data:
+                    description: Products inserted succesfully.
+                    type: object
+                    properties:
+                      row_count:
+                        description: Rows returned.
+                        type: number
+                        example: 1
+                      page_size:
+                        description: Rows limit returned by page.
+                        type: number
+                        example: 1000
+                      page_number:
+                        description: N° of page offset.
+                        type: number
+                        example: 1
+                      query_result:
+                        type: array
+                        items:
+                          type: object
+                          example:
+                            {
+                              "id_product": 8371,
+                              "product": "VESTIDO TRICOT CHEVRON",
+                            }
+        "500":
+          description: TODO.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR. Succesful inserts:"
+                  data:
+                    description: Products inserted succesfully before the error occurred.
+                    type: array
+                    items:
+                      type: string
+                      example: VESTIDO TRICOT CHEVRON

@@ -29,7 +29,7 @@ func Init() *echo.Echo {
 			},
 		}))
 
-		arrayControllers := make([]interfaces.IController, 2)
+		arrayControllers := make([]interfaces.IController, 0)
 		arrayControllers = append(arrayControllers, &controllers.HelloController{})
 		arrayControllers = append(arrayControllers, &controllers.ProductsController{})
 

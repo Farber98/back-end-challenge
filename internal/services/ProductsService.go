@@ -34,7 +34,7 @@ func (service *ProductsService) Insert(p *models.Product) (*models.Product, erro
 	return p, nil
 }
 
-// Inserts a product in the DB.
+// Inserts product tags in the DB.
 func (service *ProductsService) InsertTags(p *models.Product) ([]*models.Product, error) {
 	jsonPayload, err := json.Marshal(p)
 	if err != nil {
@@ -58,4 +58,30 @@ func (service *ProductsService) InsertTags(p *models.Product) ([]*models.Product
 	}
 
 	return prodArray, nil
+}
+
+func (service *ProductsService) Search(search *models.Product) (*models.SearchProductResult, error) {
+	jsonSearch, err := json.Marshal(search)
+	if err != nil {
+		return nil, err
+	}
+
+	db := database.ConstructDB()
+	row := db.QueryRow("CALL am_products_search(?)", string(jsonSearch))
+
+	var out database.SpOut
+	if err := row.Scan(&out); err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	if out == nil {
+		return nil, nil
+	}
+
+	result := &models.SearchProductResult{}
+
+	if err := json.Unmarshal(out, &result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
