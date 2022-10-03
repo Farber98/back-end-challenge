@@ -56,5 +56,6 @@ func (c *Config) Check() error {
 // Config Config Model
 type Config struct {
 	DB      *DBConfig      `toml:"database"`
+	Cache   *CacheConfig   `toml:"cache"`
 	Context *ContextConfig `toml:"context"`
 }

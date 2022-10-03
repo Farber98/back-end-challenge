@@ -3,7 +3,7 @@ package services
 import (
 	"database/sql"
 	"encoding/json"
-	"th-amaro/internal/database"
+	"th-amaro/internal/infraestructure"
 	"th-amaro/internal/models"
 )
 
@@ -16,10 +16,10 @@ func (service *ProductsService) Insert(p *models.Product) (*models.Product, erro
 		return nil, err
 	}
 
-	db := database.ConstructDB()
+	db := infraestructure.ConstructDB()
 	row := db.QueryRow("CALL am_products_insert(?)", string(jsonPayload))
 
-	var out database.SpOut
+	var out infraestructure.SpOut
 	if err := row.Scan(&out); err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -41,10 +41,10 @@ func (service *ProductsService) InsertTags(p *models.Product) ([]*models.Product
 		return nil, err
 	}
 
-	db := database.ConstructDB()
+	db := infraestructure.ConstructDB()
 	row := db.QueryRow("CALL am_product_tags_insert(?)", string(jsonPayload))
 
-	var out database.SpOut
+	var out infraestructure.SpOut
 
 	if err := row.Scan(&out); err != nil && err != sql.ErrNoRows {
 		return nil, err
@@ -66,10 +66,10 @@ func (service *ProductsService) Search(search *models.Product) (*models.SearchPr
 		return nil, err
 	}
 
-	db := database.ConstructDB()
+	db := infraestructure.ConstructDB()
 	row := db.QueryRow("CALL am_products_search(?)", string(jsonSearch))
 
-	var out database.SpOut
+	var out infraestructure.SpOut
 	if err := row.Scan(&out); err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}

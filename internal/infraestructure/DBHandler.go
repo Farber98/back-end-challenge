@@ -1,4 +1,4 @@
-package database
+package infraestructure
 
 import (
 	"database/sql"
@@ -23,14 +23,14 @@ type DbHandler struct {
 //SpOut returns stored procedures JSON encoded values.
 type SpOut []byte
 
-var once sync.Once
+var onceDB sync.Once
 var dbInstance *DbHandler
 
 const MysqlDatetimeLayout = "2006-01-02 15:04:05"
 
 //ConstructDB calls initDB to initialize connection.
 func ConstructDB() *DbHandler {
-	once.Do(func() {
+	onceDB.Do(func() {
 		connection, err := initDB()
 		if err != nil {
 			log.Println(err.Error())
