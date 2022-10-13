@@ -189,6 +189,8 @@ paths:
                     items:
                       type: string
                       example: VESTIDO TRICOT CHEVRON
+      security:
+        - token: []
 
   /products/search:
     get:
@@ -274,3 +276,12 @@ paths:
                     description: Operation status message.
                     type: string
                     example: "ERROR."
+      security:
+        - token: []
+
+components:
+  securitySchemes:
+    token:
+      type: http
+      scheme: bearer
+      description: Token del usuario

@@ -13,6 +13,7 @@ import (
 
 const ERR_INVALID_CREDENTIALS = "ERROR. Invalid credentials."
 const OK_LOGIN_SUCCESS = "Succesful login."
+const TOKEN_DURATION = 1 * time.Minute
 
 type UsersController struct {
 }
@@ -33,12 +34,12 @@ func (controller *UsersController) Login(c echo.Context) error {
 	}
 
 	tokenMaker := token.ConstructTokenMaker()
-	accessToken, err := tokenMaker.Paseto.CreateToken(loginReq.Username, 15*time.Minute)
+	accessToken, err := tokenMaker.Paseto.CreateToken(loginReq.Username, TOKEN_DURATION)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, models.NewResponseWithoutData(ERR_DEFAULT))
 	}
 
-	loginResponse := &models.LoginResponse{AccessToken: accessToken, CreatedAt: time.Now(), ExpiresAt: time.Now().Add(15 * time.Minute)}
+	loginResponse := &models.LoginResponse{AccessToken: accessToken, CreatedAt: time.Now(), ExpiresAt: time.Now().Add(TOKEN_DURATION)}
 
 	return c.JSON(http.StatusOK, models.NewResponseWithData(OK_LOGIN_SUCCESS, loginResponse))
 }

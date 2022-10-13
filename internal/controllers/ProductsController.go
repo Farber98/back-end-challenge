@@ -24,8 +24,8 @@ type ProductsController struct {
 
 func (controller *ProductsController) LoadRoutes(gr *echo.Group) {
 	grProducts := gr.Group("/products")
-	grProducts.POST("/batch-insert", controller.BatchInsert)
-	grProducts.GET("/search", controller.Search)
+	grProducts.POST("/batch-insert", controller.BatchInsert, pasetoAuth)
+	grProducts.GET("/search", controller.Search, pasetoAuth)
 }
 
 func (controller *ProductsController) BatchInsert(c echo.Context) error {
