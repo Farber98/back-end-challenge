@@ -37,3 +37,12 @@ deverá listar todos os produtos com aquela respectiva busca, poderá ser feito 
 * Colocar as orientações de setup no README do seu repositório.
 
 # Boa sorte 
+
+# USED:
+* Go programming language
+* MySQL database
+* go-cache in-memory cache
+* PASETO security token
+* swagger documentation.
+
+
