@@ -9,7 +9,7 @@ servers:
   - url: "http://localhost:9999"
     description: Local API
 tags:
-  - name: Test
+  - name: General
     description: Test to see if the API is up
   - name: Products
     description: Products insertions and retrievals
@@ -18,12 +18,79 @@ paths:
   /hello:
     get:
       tags:
-        - Test
+        - General
       summary: Test to see if the API is up
       description: Test to see if the API is up
       responses:
         "200":
           description: Succesful operation.
+
+  /login:
+    post:
+      tags:
+        - General
+      summary: Grants access token given username and password.
+      description: Grants access token given username and password.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  description: Username
+                  type: string
+                  example: juan
+                password:
+                  description: Password
+                  type: string
+                  example: juan
+              required:
+                - username
+                - password
+      responses:
+        "200":
+          description: Succesful operation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: Succesful login.
+                  data:
+                    description: Products inserted succesfully.
+                    type: object
+                    example:
+                      {
+                        "access_token": "v2.local.bY_PBMJKLG8m6R9MRao-ufjkRxfE66gFao5yKRRaBNoWUE_xDFCcBaw-wC3Nk_m4bOmhypXRWn7lZnMmyvCEKSL_TuYvVtGc16Ns7ABq-O9_YyxDvFokaRlHPS4zT6vE77uf4iDK2mbN9emfiTtxKtbL4C3ZtAVbyJC7VMG9InwG_huNuSQndjODVG0DL2Gy9ESc0NFOo8JHExzBxvZ9GNs7TMXQiFM3S15opyDyxm7f7sIL7mYRUiXphwh6ZpHSOABylcj2bS4UGT2J.bnVsbA",
+                        "created_at": "2022-10-12T21:55:38.039198356-03:00",
+                        "expires_at": "2022-10-12T22:10:38.039201638-03:00",
+                      }
+        "401":
+          description: Unauthorized. Wrong username and/or password.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR. Invalid credentials."
+        "500":
+          description: Internal server error. Couldn't create access token or couldn't bind parameters properly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    description: Operation status message.
+                    type: string
+                    example: "ERROR. Please, call the administrator."
 
   /products/batch-insert:
     post:

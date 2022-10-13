@@ -57,4 +57,6 @@ func (c *Config) Check() error {
 type Config struct {
 	DB      *DBConfig      `toml:"database"`
 	Context *ContextConfig `toml:"context"`
+	Token   *TokenConfig   `toml:"token"`
+	User    *User          `toml:"user"`
 }
