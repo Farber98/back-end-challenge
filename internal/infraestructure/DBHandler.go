@@ -49,7 +49,7 @@ func (h *DbHandler) GetDB() *sql.DB {
 func initDB() (*sql.DB, error) {
 	conf := config.Get().DB
 
-	cadena := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?interpolateParams=true&collation=utf8mb4_0900_ai_ci", conf.Username, conf.Password, conf.Host, conf.Port, conf.Schema)
+	cadena := fmt.Sprintf("%s:%s@tcp(mysql)/%s?interpolateParams=true&collation=utf8mb4_0900_ai_ci", conf.Username, conf.Password, conf.Schema)
 
 	conn, err := sql.Open("mysql", cadena)
 	if err != nil {
