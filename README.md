@@ -38,10 +38,23 @@ deverá listar todos os produtos com aquela respectiva busca, poderá ser feito 
 
 # Boa sorte 
 
-# USED:
+# Solution:
+
+## Setup:
+```
+$ docker compose build
+$ docker compose up
+```
+
+Note: To erase volumes.
+```
+$ docker compose down -v
+```
+
+## Stack:
 * Go programming language.
 * MySQL database.
 * go-cache in-memory cache.
 * PASETO security token.
 * Swagger API documentation.
-* Docker.
+* Docker setup.
