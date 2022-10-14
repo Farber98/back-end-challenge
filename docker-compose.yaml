@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./docker/api/Dockerfile
       # ports from container exposed to the docker machine and the guest machine
     ports:
       - "9999:9999"
@@ -13,17 +13,16 @@ services:
       - db
 
   db:
-    image: mysql:8.0
     container_name: mysql
-    environment:
-      MYSQL_USER: juan
-      MYSQL_PASSWORD: juan
-      MYSQL_ROOT_PASSWORD: juan
-      MYSQL_DATABASE: amaro
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
     ports:
       - "3306"
     volumes:
       - amaro-docker-data:/var/lib/mysql
+      - ./internal/scripts/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+      - ./internal/scripts/sps.sql:/docker-entrypoint-initdb.d/sps.sql
 
       # persisted storage
 volumes:

@@ -13,7 +13,7 @@ import (
 
 const ERR_INVALID_CREDENTIALS = "ERROR. Invalid credentials."
 const OK_LOGIN_SUCCESS = "Succesful login."
-const TOKEN_DURATION = 1 * time.Minute
+const TOKEN_DURATION = 10 * time.Minute
 
 type UsersController struct {
 }

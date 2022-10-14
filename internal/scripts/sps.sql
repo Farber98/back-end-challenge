@@ -1,3 +1,8 @@
+SET collation_connection = utf8mb4_unicode_ci;
+SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+USE amaro;
+
+DELIMITER $$
 CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_products_insert`(pIn json)
 SALIR: BEGIN
   
@@ -37,14 +42,74 @@ SALIR: BEGIN
         ) pOut 
 	FROM      products
 	WHERE     id_product = pIdProduct;
-END
+END$$
+DELIMITER ;
 
--- 
---
---
---
---
+DELIMITER $$
+CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_products_search`(pIn json)
+BEGIN
 
+  -- Declare variables
+  DECLARE pIdProduct SMALLINT DEFAULT pIn ->> '$.id_product';
+  DECLARE pProduct VARCHAR(60) DEFAULT pIn ->> '$.product';
+  DECLARE pTag VARCHAR(30) DEFAULT pIn ->> '$.tag';
+  DECLARE pPageSize INT UNSIGNED DEFAULT 1000;
+  DECLARE pPageNumber INT UNSIGNED DEFAULT 1;
+  DECLARE pOffset INT UNSIGNED DEFAULT (pPageNumber - 1) * pPageSize;
+  DECLARE pOut JSON;
+  
+  SET SESSION group_concat_max_len = 100000;
+  SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+  WITH
+    temp_base AS ( 
+      SELECT  p.id_product
+      FROM    products p
+      JOIN    product_tags pt ON p.id_product = pt.id_product
+      JOIN    tags t ON pt.id_tag = t.id_tag
+      WHERE   (p.id_product = pIdProduct OR pIdProduct IS NULL)
+        AND   (p.product = pProduct OR pProduct IS NULL)
+        AND   (t.tag = pTag OR pTag IS NULL)
+        GROUP BY p.id_product
+    ), 
+    temp_paged    AS (
+      SELECT      id_product
+      FROM        temp_base
+      INNER JOIN  products USING(id_product)
+      ORDER BY    product ASC
+      LIMIT       pOffset, pPageSize
+    )
+ 
+  SELECT  JSON_OBJECT(
+    'row_count', (SELECT COUNT(*) FROM temp_base),
+    'page_size', pPageSize,
+    'page_number', pPageNumber,
+    'query_result',
+    (
+      SELECT      CAST(
+                    CONCAT(
+                      '[',
+                      COALESCE(
+                        GROUP_CONCAT(
+                          JSON_OBJECT(
+                            'id_product', id_product,
+                            'product', UPPER(product)
+                          ) ORDER BY product ASC
+                        ),
+                        ''
+                      ),
+                      ']'
+                    ) AS JSON
+                  )
+      FROM  temp_paged
+      JOIN  products USING(id_product)
+    )
+  ) pOut;
+
+  SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_product_tags_insert`(pIn json)
 SALIR: BEGIN
   
@@ -110,71 +175,5 @@ tagsLoop:
     JOIN	products p ON pt.id_product = p.id_product
     JOIN	tags t ON pt.id_tag = t.id_tag
 	WHERE   pt.id_product = pIdProduct;
-END
-
---
---
---
---
-
-CREATE DEFINER=`juan`@`localhost` PROCEDURE `am_products_search`(pIn json)
-BEGIN
-
-  -- Declare variables
-  DECLARE pIdProduct SMALLINT DEFAULT pIn ->> '$.id_product';
-  DECLARE pProduct VARCHAR(60) DEFAULT pIn ->> '$.product';
-  DECLARE pTag VARCHAR(30) DEFAULT pIn ->> '$.tag';
-  DECLARE pPageSize INT UNSIGNED DEFAULT 1000;
-  DECLARE pPageNumber INT UNSIGNED DEFAULT 1;
-  DECLARE pOffset INT UNSIGNED DEFAULT (pPageNumber - 1) * pPageSize;
-  DECLARE pOut JSON;
-  
-  SET SESSION group_concat_max_len = 100000;
-  SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-  WITH
-    temp_base AS ( 
-      SELECT  p.id_product
-      FROM    products p
-      JOIN    product_tags pt ON p.id_product = pt.id_product
-      JOIN    tags t ON pt.id_tag = t.id_tag
-      WHERE   (p.id_product = pIdProduct OR pIdProduct IS NULL)
-        AND   (p.product = pProduct OR pProduct IS NULL)
-        AND   (t.tag = pTag OR pTag IS NULL)
-        GROUP BY p.id_product
-    ), 
-    temp_paged    AS (
-      SELECT      id_product
-      FROM        temp_base
-      INNER JOIN  products USING(id_product)
-      ORDER BY    product ASC
-      LIMIT       pOffset, pPageSize
-    )
- 
-  SELECT  JSON_OBJECT(
-    'row_count', (SELECT COUNT(*) FROM temp_base),
-    'page_size', pPageSize,
-    'page_number', pPageNumber,
-    'query_result',
-    (
-      SELECT      CAST(
-                    CONCAT(
-                      '[',
-                      COALESCE(
-                        GROUP_CONCAT(
-                          JSON_OBJECT(
-                            'id_product', id_product,
-                            'product', UPPER(product)
-                          ) ORDER BY product ASC
-                        ),
-                        ''
-                      ),
-                      ']'
-                    ) AS JSON
-                  )
-      FROM  temp_paged
-      JOIN  products USING(id_product)
-    )
-  ) pOut;
-
-  SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-END
+END$$
+DELIMITER ;
