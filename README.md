@@ -39,10 +39,9 @@ deverá listar todos os produtos com aquela respectiva busca, poderá ser feito 
 # Boa sorte 
 
 # USED:
-* Go programming language
-* MySQL database
-* go-cache in-memory cache
-* PASETO security token
-* swagger documentation.
-
-
+* Go programming language.
+* MySQL database.
+* go-cache in-memory cache.
+* PASETO security token.
+* Swagger API documentation.
+* Docker.
